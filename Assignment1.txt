@@ -1,8 +1,4 @@
 //Zachary Mushorn
-import java.util.Random;
-import java.util.Scanner;
-
-//Zachary Mushorn
 import java.util.Scanner;
 import java.util.Random;
 
