@@ -1,0 +1,141 @@
+class Automobile {
+    private int modelYear;
+    private String brand;
+
+    public Automobile(int modelYear, String brand) {
+        this.modelYear = modelYear;
+        this.brand = brand;
+    }
+
+    public int getModelYear() {
+        return modelYear;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void honk() {
+        System.out.println("Honk! Honk!");
+    }
+
+    public String toString() {
+        return "Automobile [Brand: " + brand + ", Model Year: " + modelYear + "]";
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Automobile that = (Automobile) obj;
+        return modelYear == that.modelYear && brand.equals(that.brand);
+    }
+
+    public int compareTo(Automobile other) {
+        if (this.modelYear != other.modelYear) {
+            return Integer.compare(this.modelYear, other.modelYear);
+        }
+        return this.brand.compareTo(other.brand);
+    }
+}
+
+class Car extends Automobile {
+    public Car(int modelYear, String brand) {
+        super(modelYear, brand);
+    }
+
+    public void accelerate() {
+        System.out.println("Car is accelerating...");
+    }
+
+    public void stop() {
+        System.out.println("Car is stopping...");
+    }
+
+    public void reverse() {
+        System.out.println("Car is reversing...");
+    }
+
+    public String toString() {
+        return "Car [Brand: " + getBrand() + ", Model Year: " + getModelYear() + "]";
+    }
+}
+
+class SportsCar extends Automobile {
+    public SportsCar(int modelYear, String brand) {
+        super(modelYear, brand);
+    }
+
+    public void accelerate() {
+        System.out.println("Sports car is accelerating fast!");
+    }
+
+    public void stop() {
+        System.out.println("Sports car is stopping abruptly!");
+    }
+
+    public void reverse() {
+        System.out.println("Sports car is reversing...");
+    }
+
+    public String toString() {
+        return "SportsCar [Brand: " + getBrand() + ", Model Year: " + getModelYear() + "]";
+    }
+}
+
+class JunkCar extends Automobile {
+    public JunkCar(int modelYear, String brand) {
+        super(modelYear, brand);
+    }
+
+    public void accelerate() {
+        System.out.println("Junk car is struggling to accelerate...");
+    }
+
+    public void stop() {
+        System.out.println("Junk car is taking time to stop...");
+    }
+
+    public void reverse() {
+        System.out.println("Junk car is reversing slowly...");
+    }
+
+    public String toString() {
+        return "JunkCar [Brand: " + getBrand() + ", Model Year: " + getModelYear() + "]";
+    }
+}
+
+public class Tester {
+    public static void main(String[] args) {
+        Automobile[] automobiles = {
+            new Car(2020, "Toyota"),
+            new SportsCar(2022, "Ferrari"),
+            new JunkCar(1995, "Oldsmobile"),
+            new Car(2018, "Honda")
+        };
+
+        for (Automobile auto : automobiles) {
+            System.out.println(auto);
+            auto.honk();
+
+            if (auto instanceof Car) {
+                ((Car) auto).accelerate();
+                ((Car) auto).stop();
+                ((Car) auto).reverse();
+            } else if (auto instanceof SportsCar) {
+                ((SportsCar) auto).accelerate();
+                ((SportsCar) auto).stop();
+                ((SportsCar) auto).reverse();
+            } else if (auto instanceof JunkCar) {
+                ((JunkCar) auto).accelerate();
+                ((JunkCar) auto).stop();
+                ((JunkCar) auto).reverse();
+            }
+            System.out.println();
+        }
+
+        Automobile car1 = new Car(2020, "Toyota");
+        Automobile car2 = new Car(2020, "Toyota");
+        System.out.println("car1 equals car2: " + car1.equals(car2));
+        System.out.println("car1 compareTo car2: " + car1.compareTo(car2));
+    }
+}
