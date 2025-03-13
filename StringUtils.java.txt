@@ -1,0 +1,23 @@
+StringUtils.java:
+
+public class StringUtils {
+    public String reverse(String input) {
+        return new StringBuilder(input).reverse().toString();
+    }
+}
+
+StringUtilsTest.java:
+
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+public class StringUtilsTest {
+
+    @Test
+    public void testReverse() {
+        StringUtils stringUtils = new StringUtils();
+        assertEquals("cba", stringUtils.reverse("abc"));
+        assertEquals("", stringUtils.reverse(""));
+        assertEquals("12345", stringUtils.reverse("54321"));
+    }
+}
