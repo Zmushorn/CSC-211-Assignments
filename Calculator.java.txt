@@ -1,0 +1,23 @@
+Calculator.java:
+
+public class Calculator {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+CalculatorTest.java:
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class CalculatorTest {
+
+    @Test
+    void testAdd() {
+        Calculator calculator = new Calculator();
+        assertEquals(5, calculator.add(2, 3), "2 + 3 should equal 5");
+        assertEquals(-1, calculator.add(2, -3), "2 + (-3) should equal -1");
+        assertEquals(0, calculator.add(0, 0), "0 + 0 should equal 0");
+    }
+}
