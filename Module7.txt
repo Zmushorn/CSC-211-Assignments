@@ -1,0 +1,117 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class UserRegistrationForm extends JFrame {
+    private JLabel nameLabel, emailLabel, passwordLabel, confirmPasswordLabel;
+    private JTextField nameField, emailField;
+    private JPasswordField passwordField, confirmPasswordField;
+    private JButton submitButton, clearButton;
+    private JPanel formPanel, buttonPanel;
+
+    public UserRegistrationForm() {
+        setTitle("User Registration");
+        setSize(400, 250);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        
+        initComponents();
+        addComponentsToFrame();
+        addActionListeners();
+        
+        setVisible(true);
+    }
+    
+    private void initComponents() {
+        nameLabel = new JLabel("Name:");
+        emailLabel = new JLabel("Email:");
+        passwordLabel = new JLabel("Password:");
+        confirmPasswordLabel = new JLabel("Confirm Password:");
+        
+        nameField = new JTextField(20);
+        emailField = new JTextField(20);
+        passwordField = new JPasswordField(20);
+        confirmPasswordField = new JPasswordField(20);
+        
+        submitButton = new JButton("Submit");
+        clearButton = new JButton("Clear");
+        
+        formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    }
+    
+    private void addComponentsToFrame() {
+        setLayout(new BorderLayout(10, 10));
+        
+        formPanel.add(nameLabel);
+        formPanel.add(nameField);
+        formPanel.add(emailLabel);
+        formPanel.add(emailField);
+        formPanel.add(passwordLabel);
+        formPanel.add(passwordField);
+        formPanel.add(confirmPasswordLabel);
+        formPanel.add(confirmPasswordField);
+        
+        buttonPanel.add(submitButton);
+        buttonPanel.add(clearButton);
+        
+        add(formPanel, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
+        
+        formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    }
+    
+    private void addActionListeners() {
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                submitForm();
+            }
+        });
+        
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clearForm();
+            }
+        });
+    }
+    
+    private void submitForm() {
+        String name = nameField.getText();
+        String email = emailField.getText();
+        String password = new String(passwordField.getPassword());
+        String confirmPassword = new String(confirmPasswordField.getPassword());
+        
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "All fields must be filled in.", 
+                "Validation Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        String message = "Registration Information:\n" +
+                        "Name: " + name + "\n" +
+                        "Email: " + email + "\n" +
+                        "Password: " + "*".repeat(password.length());
+        
+        JOptionPane.showMessageDialog(this, message, "Registration Successful", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private void clearForm() {
+        nameField.setText("");
+        emailField.setText("");
+        passwordField.setText("");
+        confirmPasswordField.setText("");
+    }
+    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new UserRegistrationForm();
+            }
+        });
+    }
+}
