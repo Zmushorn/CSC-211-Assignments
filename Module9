@@ -1,0 +1,150 @@
+// Base class representing a generic media item
+class MediaItem {
+    private String title;
+    private int durationInSeconds;
+    
+    public MediaItem(String title, int durationInSeconds) {
+        this.title = title;
+        this.durationInSeconds = durationInSeconds;
+    }
+    
+    public void play() {
+        System.out.println("Playing: " + title + " (" + formatDuration() + ")");
+    }
+    
+    public String getTitle() {
+        return title;
+    }
+    
+    public int getDuration() {
+        return durationInSeconds;
+    }
+    
+    protected String formatDuration() {
+        int minutes = durationInSeconds / 60;
+        int seconds = durationInSeconds % 60;
+        return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
+    }
+}
+
+// Subclass of MediaItem -    inheritance
+class Song extends MediaItem {
+    private String artist;
+    private String album;
+    
+    public Song(String title, String artist, String album, int durationInSeconds) {
+        super(title, durationInSeconds);
+        this.artist = artist;
+        this.album = album;
+    }
+    
+    // Method overriding -   polymorphism
+    @Override
+    public void play() {
+        System.out.println("Playing song: " + getTitle() + " by " + artist + 
+                           " from album " + album + " (" + formatDuration() + ")");
+    }
+    
+    public String getArtist() {
+        return artist;
+    }
+    
+    public String getAlbum() {
+        return album;
+    }
+}
+
+// Another subclass of MediaItem -    inheritance and polymorphism
+class Podcast extends MediaItem {
+    private String host;
+    private int episodeNumber;
+    
+    public Podcast(String title, String host, int episodeNumber, int durationInSeconds) {
+        super(title, durationInSeconds);
+        this.host = host;
+        this.episodeNumber = episodeNumber;
+    }
+    
+    // Method overriding -    polymorphism
+    @Override
+    public void play() {
+        System.out.println("Playing podcast: " + getTitle() + " (Episode " + episodeNumber + 
+                           ") hosted by " + host + " (" + formatDuration() + ")");
+    }
+    
+    public String getHost() {
+        return host;
+    }
+    
+    public int getEpisodeNumber() {
+        return episodeNumber;
+    }
+}
+
+// Class that uses composition - a playlist containing multiple MediaItems
+class Playlist {
+    private String name;
+    private MediaItem[] items; // Composition: Playlist contains MediaItems
+    private int itemCount;
+    
+    public Playlist(String name, int maxSize) {
+        this.name = name;
+        this.items = new MediaItem[maxSize];
+        this.itemCount = 0;
+    }
+    
+    public void addItem(MediaItem item) {
+        if (itemCount < items.length) {
+            items[itemCount] = item;
+            itemCount++;
+            System.out.println("Added \"" + item.getTitle() + "\" to playlist: " + name);
+        } else {
+            System.out.println("Cannot add more items, playlist is full!");
+        }
+    }
+    
+    public void playAll() {
+        System.out.println("\nPlaying playlist: " + name);
+        System.out.println("------------------------");
+        for (int i = 0; i < itemCount; i++) {
+            items[i].play(); // Polymorphic call
+        }
+        System.out.println("------------------------");
+        System.out.println("End of playlist: " + name);
+    }
+    
+    public int getTotalDuration() {
+        int total = 0;
+        for (int i = 0; i < itemCount; i++) {
+            total += items[i].getDuration();
+        }
+        return total;
+    }
+}
+
+// Main class to demonstrate the program
+public class MusicPlayerDemo {
+    public static void main(String[] args) {
+        // Create some media items
+        Song song1 = new Song("Bohemian Rhapsody", "Queen", "A Night at the Opera", 354);
+        Song song2 = new Song("Hotel California", "Eagles", "Hotel California", 390);
+        Podcast podcast1 = new Podcast("The Science of Everything", "Dr. Smith", 42, 1800);
+        
+        // Create a playlist using composition
+        Playlist myMix = new Playlist("Road Trip Mix", 10);
+        
+        // Add items to the playlist
+        myMix.addItem(song1);
+        myMix.addItem(podcast1);
+        myMix.addItem(song2);
+        
+        // Demonstrate polymorphism by playing the playlist
+        myMix.playAll();
+        
+        // Show total duration
+        int totalSeconds = myMix.getTotalDuration();
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+        System.out.println("\nTotal playlist duration: " + minutes + " minutes and " + seconds + " seconds");
+    }
+}
