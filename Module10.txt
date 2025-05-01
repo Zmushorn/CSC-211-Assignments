@@ -1,0 +1,151 @@
+Abstract Example:
+
+abstract class Animal {
+    protected String name;
+
+    public Animal(String name) {
+        this.name = name;
+    }
+    
+    public void sleep() {
+        System.out.println(name + " is sleeping...");
+    }
+    
+    public abstract void makeSound();
+    
+    public abstract boolean eat(String food);
+}
+
+class Dog extends Animal {
+    public Dog(String name) {
+        super(name);
+    }
+    
+    @Override
+    public void makeSound() {
+        System.out.println("Woof! Woof!");
+    }
+
+    @Override
+    public boolean eat(String food) {
+        if (food.equals("dogfood") || food.equals("bone")) {
+            System.out.println(name + " is eating " + food);
+            return true;
+        } else {
+            System.out.println(name + " refuses to eat " + food);
+            return false;
+        }
+    }
+    
+    public void wagTail() {
+        System.out.println(name + " is wagging tail");
+    }
+}
+
+public class AbstractDemo {
+    public static void main(String[] args) {
+        
+        Dog dog = new Dog("Buddy");
+        dog.sleep();     
+        dog.makeSound();   
+        dog.eat("bone");   
+        dog.wagTail();    
+    }
+}
+
+Interface Example:
+
+interface Playable {
+    String GAME_TYPE = "Interactive";
+    
+    void play();
+    void pause();
+    void stop();
+    
+    default void info() {
+        System.out.println("This is a " + GAME_TYPE + " game");
+    }
+
+    static boolean isPlayable(String gameType) {
+        return gameType.equalsIgnoreCase(GAME_TYPE);
+    }
+}
+
+interface Downloadable {
+    void download();
+    int getSize();
+}
+
+class VideoGame implements Playable {
+    private String title;
+    
+    public VideoGame(String title) {
+        this.title = title;
+    }
+    
+    @Override
+    public void play() {
+        System.out.println("Playing " + title);
+    }
+    
+    @Override
+    public void pause() {
+        System.out.println(title + " paused");
+    }
+    
+    @Override
+    public void stop() {
+        System.out.println(title + " stopped");
+    }
+}
+
+class MobileGame implements Playable, Downloadable {
+    private String title;
+    private int sizeInMB;
+    
+    public MobileGame(String title, int sizeInMB) {
+        this.title = title;
+        this.sizeInMB = sizeInMB;
+    }
+
+    @Override
+    public void play() {
+        System.out.println("Playing " + title + " on mobile");
+    }
+    
+    @Override
+    public void pause() {
+        System.out.println(title + " paused");
+    }
+    
+    @Override
+    public void stop() {
+        System.out.println(title + " stopped");
+    }
+    
+    @Override
+    public void download() {
+        System.out.println("Downloading " + title);
+    }
+    
+    @Override
+    public int getSize() {
+        return sizeInMB;
+    }
+}
+
+public class InterfaceDemo {
+    public static void main(String[] args) {
+        VideoGame videoGame = new VideoGame("The Last of Us");
+        videoGame.play();
+        videoGame.info();  
+        
+        MobileGame mobileGame = new MobileGame("Candy Crush", 50);
+        mobileGame.play();
+        mobileGame.download();
+        System.out.println("Game size: " + mobileGame.getSize() + "MB");
+        
+        System.out.println("Is Interactive playable? " + 
+                          Playable.isPlayable("Interactive"));
+    }
+}
