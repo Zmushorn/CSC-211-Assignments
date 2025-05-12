@@ -1,0 +1,188 @@
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+abstract class Product {
+    protected String name;
+    protected double price;
+
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public abstract String getCategory();
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+class Electronics extends Product {
+    public Electronics(String name, double price) {
+        super(name, price);
+    }
+
+    @Override
+    public String getCategory() {
+        return "Electronics";
+    }
+}
+
+class Clothing extends Product {
+    public Clothing(String name, double price) {
+        super(name, price);
+    }
+
+    @Override
+    public String getCategory() {
+        return "Clothing";
+    }
+}
+
+class Grocery extends Product {
+    public Grocery(String name, double price) {
+        super(name, price);
+    }
+
+    @Override
+    public String getCategory() {
+        return "Grocery";
+    }
+}
+
+abstract class User {
+    protected String username;
+
+    public User(String username) {
+        this.username = username;
+    }
+
+    public abstract String getRole();
+}
+
+class Customer extends User {
+    private List<Product> cart = new ArrayList<>();
+
+    public Customer(String username) {
+        super(username);
+    }
+
+    public void addToCart(Product product) {
+        cart.add(product);
+    }
+
+    public List<Product> getCart() {
+        return cart;
+    }
+
+    @Override
+    public String getRole() {
+        return "Customer";
+    }
+}
+
+class Admin extends User {
+    public Admin(String username) {
+        super(username);
+    }
+
+    @Override
+    public String getRole() {
+        return "Admin";
+    }
+}
+
+class Order {
+    private Customer customer;
+    private List<Product> products;
+
+    public Order(Customer customer) {
+        this.customer = customer;
+        this.products = new ArrayList<>(customer.getCart());
+    }
+
+    public double calculateTotal() {
+        return products.stream().mapToDouble(Product::getPrice).sum();
+    }
+
+    public double applyTax(double taxRate) {
+        return calculateTotal() * taxRate;
+    }
+
+    public double calculateShippingFee() {
+        return products.stream().mapToDouble(p -> 5.0).sum();
+    }
+
+    public double calculateFinalTotal() {
+        return calculateTotal() + applyTax(0.08) + calculateShippingFee();
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+}
+
+class ProductService {
+    private List<Product> products = new ArrayList<>();
+
+    public void addProduct(Product p) {
+        products.add(p);
+    }
+
+    public List<Product> searchByName(String keyword) {
+        return products.stream()
+                .filter(p -> p.getName().toLowerCase().contains(keyword.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Product> filterByCategory(String category) {
+        Predicate<Product> filter = p -> p.getCategory().equalsIgnoreCase(category);
+        return products.stream().filter(filter).collect(Collectors.toList());
+    }
+
+    public List<Product> sortByPriceAscending() {
+        return products.stream()
+                .sorted(Comparator.comparingDouble(Product::getPrice))
+                .collect(Collectors.toList());
+    }
+}
+
+public class ECommerceApp {
+    public static void main(String[] args) {
+        ProductService productService = new ProductService();
+
+        productService.addProduct(new Electronics("Laptop", 999.99));
+        productService.addProduct(new Grocery("Apple", 0.99));
+        productService.addProduct(new Clothing("T-Shirt", 19.99));
+        productService.addProduct(new Electronics("Headphones", 199.99));
+
+        Customer customer = new Customer("john_doe");
+        customer.addToCart(new Electronics("Laptop", 999.99));
+        customer.addToCart(new Grocery("Apple", 0.99));
+
+        Order order = new Order(customer);
+
+        System.out.println("Customer: " + customer.username);
+        System.out.println("Cart Total: $" + order.calculateTotal());
+        System.out.println("Tax: $" + order.applyTax(0.08));
+        System.out.println("Shipping: $" + order.calculateShippingFee());
+        System.out.println("Final Total: $" + order.calculateFinalTotal());
+
+        System.out.println("\n=== Electronics ===");
+        productService.filterByCategory("Electronics")
+                      .forEach(p -> System.out.println(p.getName() + " - $" + p.getPrice()));
+
+        System.out.println("\n=== Search Results for 'Lap' ===");
+        productService.searchByName("Lap")
+                      .forEach(p -> System.out.println(p.getName()));
+
+        System.out.println("\n=== Products Sorted by Price ===");
+        productService.sortByPriceAscending()
+                      .forEach(p -> System.out.println(p.getName() + " - $" + p.getPrice()));
+    }
+}
